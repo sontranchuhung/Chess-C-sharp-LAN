@@ -1,2 +1,7 @@
-# Nhom1 NT106 DoAnCK
- Chess game 
+CSharpChess
+===========
+
+A Chess game in C# / Windows Forms.
+
+Class Diagram
+![Class Diagram](ClassDiagram.png)

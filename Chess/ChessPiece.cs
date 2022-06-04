@@ -8,13 +8,13 @@ namespace Chess
 {
     public abstract class ChessPiece
     {
+        #region Các thuộc tính của class
         protected const int MAX_DISTANCE = 7;
 
         // Pawn fields
         protected bool canEnPassantLeft;
         protected bool canEnPassantRight;
         protected bool canDoubleJump;
-
         // Other fields
         protected bool canCastle; // For rooks and kings
         protected Point[][] availableMoves; // Jagged array for moves ([direction][distance])
@@ -38,7 +38,9 @@ namespace Chess
         } 
 
         public abstract ChessPiece CalculateMoves();
+        #endregion
 
+        #region Get relative horizontal or virtical movement coordinates // Used by: King, Queen, Pawn, Rook
         /// <summary>
         /// Get relative horizontal or virtical movement coordinates
         /// Used by: King, Queen, Pawn, Rook
@@ -75,11 +77,10 @@ namespace Chess
             }
             return movement;
         }
+        #endregion
 
-        /// <summary>
-        /// Get relative diagnal movement coordinates
-        /// Used by: King, Queen, Pawn, Bishop
-        /// </summary>
+        #region Get relative diagnal movement coordinates // Used by: King, Queen, Pawn, Bishop
+
         /// <param name="distance">How far in the given direction</param>
         /// <param name="direction">Direction relative to player</param>
         /// <returns>Return an array for diagnal movement</returns>
@@ -116,5 +117,6 @@ namespace Chess
             }
             return attack;
         }
+        #endregion
     }
 }
