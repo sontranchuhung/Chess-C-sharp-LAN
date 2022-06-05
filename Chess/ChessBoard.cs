@@ -15,6 +15,8 @@ namespace Chess
         private const int COLUMNS = 8;
         private int ROWS = 8;
 
+        public int castling = 0;
+        public int PromotionValue=-1; //0 Knight, 1 Bishop, 2 Rook, 3 Queen
         public int playerTurn = 1;
         public void SwapPlayerTurn()
         {
@@ -302,18 +304,61 @@ namespace Chess
                     {
                         if ((pawn.Player == 0 && to.y == 7) || (pawn.Player == 1 && to.y == 0))
                         {
-                            PawnPromotion promoteForm = new PawnPromotion(pawn.Player);
-
-                            
-                            while (promoteForm.PromotedPiece == null)
+                            //Nếu bên Receive nhận buffer phong cấp
+                            if (PromotionValue != -1)
                             {
-                                if (promoteForm.ShowDialog() == DialogResult.OK)
+                                switch (PromotionValue)
                                 {
-                                    break;
+                                    case 0:
+                                        movingPiece = new Knight();
+                                        break;
+                                    case 1:
+                                        movingPiece = new Bishop();
+                                        break;
+                                    case 2:
+                                        movingPiece = new Rook();
+                                        break;
+                                    case 3:
+                                        movingPiece = new Queen();
+                                        break;
+                                    default:
+                                        MessageBox.Show("Lỗi PromotionValue sai");
+                                        break;
                                 }
+                                PromotionValue = -1;
                             }
+                            else
+                            {
+                                PawnPromotion promoteForm = new PawnPromotion(pawn.Player);
 
-                            movingPiece = promoteForm.PromotedPiece;
+
+                                while (promoteForm.PromotedPiece == null)
+                                {
+                                    if (promoteForm.ShowDialog() == DialogResult.OK)
+                                    {
+                                        break;
+                                    }
+                                }
+                                switch (promoteForm.PromotedPiece.ToString())
+                                {
+                                    case "Chess.Knight":
+                                        PromotionValue = 0;
+                                        break;
+                                    case "Chess.Bishop":
+                                        PromotionValue = 1;
+                                        break;
+                                    case "Chess.Rook":
+                                        PromotionValue = 2;
+                                        break;
+                                    case "Chess.Queen":
+                                        PromotionValue = 3;
+                                        break;
+                                    default:
+                                        MessageBox.Show("Wrong promotion piece");
+                                        break;
+                                }
+                                movingPiece = promoteForm.PromotedPiece;
+                            }
                             movingPiece.Player = pawn.Player;
                         }
                     }
@@ -331,11 +376,13 @@ namespace Chess
                     {   // Move rook for Queenside castle
                         boardArray[to.x + 1, from.y] = boardArray[0, from.y];
                         boardArray[0, from.y] = null;
+                        castling = 1;
                     }
                     if (from.x - to.x == -2)
                     {   // Move rook for Kingside castle
                         boardArray[to.x - 1, from.y] = boardArray[COLUMNS - 1, from.y];
                         boardArray[COLUMNS - 1, from.y] = null;
+                        castling = 1;
                     }
                 }
                 movingPiece.CalculateMoves();

@@ -16,7 +16,7 @@ namespace FormClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GameBoardForm());
+            Application.Run(new dashboard());
         }
     }
 }
