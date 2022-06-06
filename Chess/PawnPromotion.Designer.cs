@@ -43,8 +43,8 @@ namespace Chess
             // btn_blackKnight
             // 
             this.btn_blackKnight.BackColor = System.Drawing.Color.Transparent;
-            this.btn_blackKnight.BackgroundImage = global::Chess.Properties.Resources.b_Knight;
-            this.btn_blackKnight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_blackKnight.BackgroundImage = global::Chess.Properties.Resources.b_knight;
+            this.btn_blackKnight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_blackKnight.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_blackKnight.Location = new System.Drawing.Point(352, 28);
             this.btn_blackKnight.Name = "btn_blackKnight";
@@ -56,7 +56,7 @@ namespace Chess
             // 
             this.btn_blackRook.BackColor = System.Drawing.Color.Transparent;
             this.btn_blackRook.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_blackRook.BackgroundImage")));
-            this.btn_blackRook.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_blackRook.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_blackRook.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_blackRook.Location = new System.Drawing.Point(162, 28);
             this.btn_blackRook.Name = "btn_blackRook";
@@ -67,8 +67,8 @@ namespace Chess
             // btn_blackQueen
             // 
             this.btn_blackQueen.BackColor = System.Drawing.Color.Transparent;
-            this.btn_blackQueen.BackgroundImage = global::Chess.Properties.Resources.b_Queen;
-            this.btn_blackQueen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_blackQueen.BackgroundImage = global::Chess.Properties.Resources.b_queen;
+            this.btn_blackQueen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_blackQueen.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_blackQueen.Location = new System.Drawing.Point(67, 28);
             this.btn_blackQueen.Name = "btn_blackQueen";
@@ -79,8 +79,8 @@ namespace Chess
             // btn_blackBishop
             // 
             this.btn_blackBishop.BackColor = System.Drawing.Color.Transparent;
-            this.btn_blackBishop.BackgroundImage = global::Chess.Properties.Resources.b_Bishop;
-            this.btn_blackBishop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_blackBishop.BackgroundImage = global::Chess.Properties.Resources.b_bishop;
+            this.btn_blackBishop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_blackBishop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_blackBishop.Location = new System.Drawing.Point(257, 28);
             this.btn_blackBishop.Name = "btn_blackBishop";
@@ -91,8 +91,8 @@ namespace Chess
             // btn_whiteKnight
             // 
             this.btn_whiteKnight.BackColor = System.Drawing.Color.Transparent;
-            this.btn_whiteKnight.BackgroundImage = global::Chess.Properties.Resources.w_Knight;
-            this.btn_whiteKnight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_whiteKnight.BackgroundImage = global::Chess.Properties.Resources.w_knight;
+            this.btn_whiteKnight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_whiteKnight.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_whiteKnight.Location = new System.Drawing.Point(352, 90);
             this.btn_whiteKnight.Name = "btn_whiteKnight";
@@ -103,8 +103,8 @@ namespace Chess
             // btn_whiteRook
             // 
             this.btn_whiteRook.BackColor = System.Drawing.Color.Transparent;
-            this.btn_whiteRook.BackgroundImage = global::Chess.Properties.Resources.w_Rook;
-            this.btn_whiteRook.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_whiteRook.BackgroundImage = global::Chess.Properties.Resources.w_rook;
+            this.btn_whiteRook.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_whiteRook.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_whiteRook.Location = new System.Drawing.Point(162, 90);
             this.btn_whiteRook.Name = "btn_whiteRook";
@@ -115,8 +115,8 @@ namespace Chess
             // btn_whiteQueen
             // 
             this.btn_whiteQueen.BackColor = System.Drawing.Color.Transparent;
-            this.btn_whiteQueen.BackgroundImage = global::Chess.Properties.Resources.w_Queen;
-            this.btn_whiteQueen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_whiteQueen.BackgroundImage = global::Chess.Properties.Resources.w_queen;
+            this.btn_whiteQueen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_whiteQueen.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_whiteQueen.Location = new System.Drawing.Point(67, 90);
             this.btn_whiteQueen.Name = "btn_whiteQueen";
@@ -127,8 +127,8 @@ namespace Chess
             // btn_whiteBishop
             // 
             this.btn_whiteBishop.BackColor = System.Drawing.Color.Transparent;
-            this.btn_whiteBishop.BackgroundImage = global::Chess.Properties.Resources.w_Bishop;
-            this.btn_whiteBishop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btn_whiteBishop.BackgroundImage = global::Chess.Properties.Resources.w_bishop;
+            this.btn_whiteBishop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_whiteBishop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_whiteBishop.Location = new System.Drawing.Point(257, 90);
             this.btn_whiteBishop.Name = "btn_whiteBishop";

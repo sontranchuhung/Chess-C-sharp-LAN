@@ -58,7 +58,7 @@ namespace FormClient
                     Button button = new Button();
                     button.Dock = DockStyle.Fill;
                     button.Margin = new Padding(0);
-                    button.FlatStyle = FlatStyle.Popup;
+                    //button.FlatStyle = FlatStyle.Popup;
                     button.FlatAppearance.BorderSize = 0;
 
                     boardLayoutPanel.Controls.Add(button);
@@ -121,8 +121,8 @@ namespace FormClient
                         buffer[4] = (byte)selectedPiece.y;
                         buffer[5] = (byte)(a.Column - 1);
                         buffer[6] = (byte)(a.Row - 1);
+                        DrawPieces(chessBoard);
                         client.Send(buffer);
-                        MessageBox.Show("gửi thông tin buffer thành công!");
                         buffer = tempBuffer;//reset lại buffer để gửi lần tiếp theo
                         client.StartReceiving();
                     }
@@ -159,7 +159,9 @@ namespace FormClient
                     buffer[4] = (byte)selectedPiece.y;
                     buffer[5] = (byte)(a.Column - 1);
                     buffer[6] = (byte)(a.Row - 1);
+                    DrawPieces(chessBoard);
                     client.Send(buffer);
+                    buffer = tempBuffer;
                     client.StartReceiving();
                 }
                 else
@@ -187,8 +189,13 @@ namespace FormClient
                 foreach (Chess.Point point in chessBoard.PieceActions(a.Column - 1, a.Row - 1))
                 {
                     Button actionButton = (Button)boardLayoutPanel.GetControlFromPosition(point.x + 1, point.y + 1);
-                    actionButton.BackColor = Color.Transparent;
-                    actionButton.FlatStyle = FlatStyle.Popup;
+                    //actionButton.Text = "Ăn đây nè!";
+                    if (actionButton.BackgroundImage == null)
+                    {
+                        actionButton.BackgroundImage = global::Chess.Properties.Resources.dot;
+                        actionButton.BackgroundImageLayout = ImageLayout.Stretch;
+                    }
+                    else actionButton.BackColor = Color.Red;
                 }
                 if (chessBoard.KingInCheck(chessPiece.Player) && chessBoard.PieceActions(a.Column - 1, a.Row - 1).Count() == 0)
                     MessageBox.Show("Vua đang bị chiếu");
@@ -219,22 +226,22 @@ namespace FormClient
                             switch (chessPiece.ToString().Replace("Chess.", ""))
                             {
                                 case ("Knight"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.w_Knight;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.w_knight;
                                     break;
                                 case ("Bishop"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.w_Bishop;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.w_bishop;
                                     break;
                                 case ("Rook"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.w_Rook;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.w_rook;
                                     break;
                                 case ("Queen"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.w_Queen;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.w_queen;
                                     break;
                                 case ("Pawn"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.w_Pawn;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.w_pawn;
                                     break;
                                 case ("King"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.w_King;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.w_king;
                                     break;
                             }
                         }
@@ -243,29 +250,29 @@ namespace FormClient
                             switch (chessPiece.ToString().Replace("Chess.", ""))
                             {
                                 case ("Knight"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.b_Knight;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.b_knight;
                                     break;
                                 case ("Bishop"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.b_Bishop;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.b_bishop;
                                     break;
                                 case ("Rook"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.b_Rook;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.b_rook;
                                     break;
                                 case ("Queen"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.b_Queen;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.b_queen;
                                     break;
                                 case ("Pawn"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.b_Pawn;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.b_pawn;
                                     break;
                                 case ("King"):
-                                    button.BackgroundImage = global::Chess.Properties.Resources.b_King;
+                                    button.BackgroundImage = global::Chess.Properties.Resources.b_king;
                                     break;
                             }
                         }
 
                         if ((x + y) % 2 == 1) button.BackColor = Color.DarkGray;
                         else button.BackColor = Color.White;
-                        button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+                        button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
                         button.FlatStyle = FlatStyle.Popup;
                         button.UseVisualStyleBackColor = false;
                     }
@@ -279,7 +286,7 @@ namespace FormClient
 
                         if ((x + y) % 2 == 1) button.BackColor = Color.DarkGray;
                         else button.BackColor = Color.White;
-
+                        button.FlatStyle = FlatStyle.Popup;
                         button.Text = "";
                         button.Tag = null;
                     }
@@ -339,7 +346,7 @@ namespace FormClient
         {
             private Socket connectingSocket;
 
-            public int player;
+            public int player = -1;
             public bool isYourturn;
             public bool BeforeGameStage = true;
             static public byte[] clientBuffer;
@@ -355,7 +362,6 @@ namespace FormClient
                     try
                     {
                         connectingSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1234));
-                        MessageBox.Show("Connect to server success!");
                     }
                     catch { MessageBox.Show("Connect to server failed!"); }
                 }
@@ -405,18 +411,17 @@ namespace FormClient
                         //Server quyết định chọn bên trắng hay đen cho client
                         if (clientBuffer[0] == 0)
                         {
-                            player = 0;
+                            player = 1;
                             MessageBox.Show("Bạn là bên trắng, bạn đi trước");
                         }
                         else if (clientBuffer[0] == 1)
                         {
-                            player = 1;
+                            player = 0;
                             MessageBox.Show("Bạn là bên đen, đợi nước đi");
                         }
                         else
                             MessageBox.Show("Wrong buffer[0]");
 
-                        BeforeGameStage = false;
                     }
                     //Trong ván đấu
                     else

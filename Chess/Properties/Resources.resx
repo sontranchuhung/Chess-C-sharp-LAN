@@ -118,40 +118,43 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="b_Bishop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="b_bishop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\b_Bishop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="b_King" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="b_king" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\b_King.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="b_Knight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="b_knight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\b_Knight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="b_Pawn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="b_pawn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\b_Pawn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="b_Queen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="b_queen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\b_Queen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="b_Rook" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="b_rook" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\b_Rook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="w_Bishop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="dot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="w_bishop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\w_Bishop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="w_King" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\w_King.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="w_king" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w_king.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="w_Knight" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\w_Knight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="w_knight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w_knight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="w_Pawn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\w_Pawn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="w_pawn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w_pawn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="w_Queen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\w_Queen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="w_queen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w_queen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="w_Rook" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\w_Rook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="w_rook" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w_rook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

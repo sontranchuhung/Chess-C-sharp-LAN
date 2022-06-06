@@ -78,40 +78,43 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\w_Pawn.png" />
+    <None Include="Resources\b_queen.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\w_Queen.png" />
+    <None Include="Resources\b_rook.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\w_King.png" />
+    <None Include="Resources\w_bishop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\w_Knight.png" />
+    <None Include="Resources\w_king.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\w_Bishop.png" />
+    <None Include="Resources\w_knight.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\w_Rook.png" />
+    <None Include="Resources\w_pawn.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b_Pawn.png" />
+    <None Include="Resources\w_queen.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b_Queen.png" />
+    <None Include="Resources\w_rook.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b_King.png" />
+    <None Include="Resources\b_bishop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b_Knight.png" />
+    <None Include="Resources\b_king.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b_Bishop.png" />
+    <None Include="Resources\b_knight.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b_Rook.png" />
+    <None Include="Resources\b_pawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
