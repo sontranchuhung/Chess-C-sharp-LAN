@@ -75,6 +75,7 @@ namespace FormClient
             if (localPlay == true)
             {
                 client.TryToConnect();
+                
             }
         }
 
@@ -117,21 +118,20 @@ namespace FormClient
 
                     if (localPlay == true)
                     {
+                        client.Send(buffer);
                         buffer[3] = (byte)selectedPiece.x;
                         buffer[4] = (byte)selectedPiece.y;
                         buffer[5] = (byte)(a.Column - 1);
                         buffer[6] = (byte)(a.Row - 1);
-                        DrawPieces(chessBoard);
                         client.Send(buffer);
+                        DrawPieces(chessBoard);
                         buffer = tempBuffer;//reset lại buffer để gửi lần tiếp theo
                         client.StartReceiving();
                     }
-                    else
-                    {
-                        selectedPlayer = -1;
-                        DrawPieces(chessBoard);
-                        chessBoard.SwapPlayerTurn();
-                    }
+
+                    selectedPlayer = -1;
+                    DrawPieces(chessBoard);
+                    chessBoard.SwapPlayerTurn();
                 }
                 //selectedPlayer = -1;
                 return;
@@ -155,21 +155,20 @@ namespace FormClient
                 }
                 if (localPlay == true)
                 {
+                    client.Send(buffer);
                     buffer[3] = (byte)selectedPiece.x;
                     buffer[4] = (byte)selectedPiece.y;
                     buffer[5] = (byte)(a.Column - 1);
                     buffer[6] = (byte)(a.Row - 1);
-                    DrawPieces(chessBoard);
                     client.Send(buffer);
-                    buffer = tempBuffer;
+                    DrawPieces(chessBoard);
+                    buffer = tempBuffer;//reset lại buffer để gửi lần tiếp theo
                     client.StartReceiving();
                 }
-                else
-                {
-                    selectedPlayer = -1;
-                    DrawPieces(chessBoard);
-                    chessBoard.SwapPlayerTurn();
-                }
+
+                selectedPlayer = -1;
+                DrawPieces(chessBoard);
+                chessBoard.SwapPlayerTurn();
             }
 
             //Hiện nước đi của quân mình
@@ -195,7 +194,7 @@ namespace FormClient
                         actionButton.BackgroundImage = global::Chess.Properties.Resources.dot;
                         actionButton.BackgroundImageLayout = ImageLayout.Stretch;
                     }
-                    else actionButton.BackColor = Color.Red;
+                    else actionButton.BackColor = Color.LightSkyBlue;
                 }
                 if (chessBoard.KingInCheck(chessPiece.Player) && chessBoard.PieceActions(a.Column - 1, a.Row - 1).Count() == 0)
                     MessageBox.Show("Vua đang bị chiếu");
@@ -270,8 +269,6 @@ namespace FormClient
                             }
                         }
 
-                        if ((x + y) % 2 == 1) button.BackColor = Color.DarkGray;
-                        else button.BackColor = Color.White;
                         button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
                         button.FlatStyle = FlatStyle.Popup;
                         button.UseVisualStyleBackColor = false;
@@ -283,16 +280,14 @@ namespace FormClient
                     else
                     {
                         button.BackgroundImage = null;
-
-                        if ((x + y) % 2 == 1) button.BackColor = Color.DarkGray;
-                        else button.BackColor = Color.White;
                         button.FlatStyle = FlatStyle.Popup;
                         button.Text = "";
                         button.Tag = null;
                     }
 
                     #endregion
-
+                    if ((x + y) % 2 == 1) button.BackColor = Color.RosyBrown;
+                    else button.BackColor = Color.White;
                     this.coordinates.SetToolTip(button, String.Format("({0}, {1})", x, y));
                 }
             }
@@ -378,8 +373,6 @@ namespace FormClient
                 try
                 {
                     connectingSocket.Send(buffer);
-                    //Lắng nghe nước đi của đối phương
-                    StartReceiving();
                 }
                 catch (Exception ex)
                 {
@@ -400,9 +393,8 @@ namespace FormClient
             {
                 try
                 {
+                   
                     connectingSocket.Receive(clientBuffer, clientBuffer.Length, SocketFlags.None);
-                    //string data = Encoding.Default.GetString(buffer);
-                    //MessageBox.Show("Receiving data from server: \r\n" + data);
 
                     //Được gọi bởi hàm TryToConnect
                     if (BeforeGameStage)
@@ -418,6 +410,7 @@ namespace FormClient
                         {
                             player = 0;
                             MessageBox.Show("Bạn là bên đen, đợi nước đi");
+
                         }
                         else
                             MessageBox.Show("Wrong buffer[0]");
@@ -426,18 +419,12 @@ namespace FormClient
                     //Trong ván đấu
                     else
                     {
-                        ChessPlay _temp = new ChessPlay();
+                        
                         if (clientBuffer[3] != -1)
                         {
                             chessBoard.PromotionValue = clientBuffer[3];
                         }
-
                         chessBoard.ActionPiece(clientBuffer[4], clientBuffer[5], clientBuffer[6], clientBuffer[7]);
-                        selectedPlayer = -1;
-                        _temp.DrawPieces(chessBoard);
-                        chessBoard.SwapPlayerTurn();
-
-                        _temp.Dispose();
                     }
                 }
                 catch
