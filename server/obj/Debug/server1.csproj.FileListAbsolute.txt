@@ -8,3 +8,13 @@ C:\Users\DELL\Source\Repos\server1\obj\Debug\server1.csproj.CoreCompileInputs.ca
 C:\Users\DELL\Source\Repos\server1\obj\Debug\server1.exe
 C:\Users\DELL\Source\Repos\server1\obj\Debug\server1.pdb
 C:\Users\DELL\Source\Repos\server1\obj\Debug\server1.Server.resources
+C:\Users\DELL\Desktop\server\bin\Debug\server1.exe.config
+C:\Users\DELL\Desktop\server\bin\Debug\server1.exe
+C:\Users\DELL\Desktop\server\bin\Debug\server1.pdb
+C:\Users\DELL\Desktop\server\obj\Debug\server1.csproj.AssemblyReference.cache
+C:\Users\DELL\Desktop\server\obj\Debug\server1.Server.resources
+C:\Users\DELL\Desktop\server\obj\Debug\server1.Properties.Resources.resources
+C:\Users\DELL\Desktop\server\obj\Debug\server1.csproj.GenerateResource.cache
+C:\Users\DELL\Desktop\server\obj\Debug\server1.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Desktop\server\obj\Debug\server1.exe
+C:\Users\DELL\Desktop\server\obj\Debug\server1.pdb

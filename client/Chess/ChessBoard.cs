@@ -81,7 +81,6 @@ namespace Chess
                 boardArray = this.boardArray;
             }
 
-            bool[,] legalActions = new bool[boardArray.GetLength(0), boardArray.GetLength(1)];
             List<Point> availableActions = new List<Point>();
             ChessPiece movingPiece = boardArray[x, y];
             

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
@@ -76,7 +77,7 @@ namespace server1
         public int id { get; set; }
         public byte[] data;
         public bool isWaiting = false;
-
+        
         public Client(Socket _socket,int _id)
         {
             clientSock = _socket;
@@ -99,10 +100,10 @@ namespace server1
         {
             try
             {
-                
                 if (clientSock.EndReceive(AR) > 1)
                 {
                     clientSock.Receive(data, data.Length, SocketFlags.None);
+                    MessageBox.Show($"Server receive data from id {id}");
                 }
                 else
                 {
@@ -170,7 +171,7 @@ namespace server1
             //buffer để gửi
             byte[] buffer = new byte[8];
 
-            #region: TRƯỚC VÁN ĐẤU
+            #region TRƯỚC VÁN ĐẤU
 
             while (true)
             {
@@ -180,38 +181,64 @@ namespace server1
                     break;
             }
             //Gửi lần đầu để gọi hàm CallBack trong client
-            firstPlayer.clientSock.Send(buffer);
-            secondPlayer.clientSock.Send(buffer);
-
             //Gửi thông tin vào lần 2
-            buffer[0] = 0;
+
+            //Quân trắng
+            firstPlayer.clientSock.Send(buffer);
+            buffer[0] = 1;
             firstPlayer.clientSock.Send(buffer);
 
-            buffer[0] = 1;
+            //Quân đen
+            secondPlayer.clientSock.Send(buffer);
+            buffer[0] = 0;
             secondPlayer.clientSock.Send(buffer);
 
             #endregion
 
-            #region: VÁN ĐẤU
+            #region VÁN ĐẤU
 
             bool WhiteToPlay = true;
             while (true)
             {
                 buffer = new byte[8];
+
                 //Cần phải gửi gói tin mẫu trước để gọi hàm CallBack của client
                 if (WhiteToPlay)
                 {
                     firstPlayer.StartReceiving();
+                    
+                    while (firstPlayer.data[3] == firstPlayer.data[5]
+                        && firstPlayer.data[4] == firstPlayer.data[6])//Chưa thực hiện nước đi
+                    {
+                        Thread.Sleep(3000);
+                    }
                     secondPlayer.send(buffer);
                     buffer = firstPlayer.data;
                     secondPlayer.send(buffer);
+
+                    MessageBox.Show($"Server receive buffer byte[0]:{buffer[0]} \r\n" +
+                        $"byte[3]:{buffer[3]}\r\n" +
+                        $"byte[4]:{buffer[4]}\r\n" +
+                        $"Send buffer to second player!");
+                    firstPlayer.data = new byte[8];
                 }
                 else
                 {
                     secondPlayer.StartReceiving();
+                    while (secondPlayer.data[3] == secondPlayer.data[5]
+                        && secondPlayer.data[4] == secondPlayer.data[6])//Chưa thực hiện nước đi
+                    {
+                        Thread.Sleep(3000);
+                    }
                     firstPlayer.send(buffer);
                     buffer = secondPlayer.data;
                     firstPlayer.send(buffer);
+
+                    MessageBox.Show($"Server Receive buffer byte[0]:{buffer[0]} \r\n" +
+                        $"byte[3]:{buffer[3]}\r\n" +
+                        $"byte[4]:{buffer[4]}\r\n" +
+                        $"Send buffer to first player!");
+                    secondPlayer.data = new byte[8];
                 }
                 WhiteToPlay = !WhiteToPlay;
                 //Ván kết thúc
