@@ -77,7 +77,7 @@ namespace FormClient
 
             if (localPlay)
             {
-                TryToConnect();
+                clientBuffer = await TryToConnect();
             }
 
             DrawPieces(chessBoard);
@@ -423,7 +423,7 @@ namespace FormClient
             }
         }
 
-        public void TryToConnect()
+        public byte[] TryToConnect()
         {
             connectingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -437,7 +437,7 @@ namespace FormClient
                 }
                 catch { MessageBox.Show("Connect to server failed!"); }
             }
-            StartReceiving();
+            return StartReceiving();
         }
 
         public void Send(byte[] buffer)
@@ -460,85 +460,69 @@ namespace FormClient
             }
         }
 
-        public void StartReceiving()
+        
+        public byte[] StartReceiving()
         {
+            clientBuffer = new byte[8];
             try
             {
-                clientBuffer = new byte[8];
-                connectingSocket.BeginReceive(clientBuffer, 0, clientBuffer.Length, SocketFlags.None, ReceiveCallback, null);
+                connectingSocket.ReceiveAsync()
+                connectingSocket.Receive(clientBuffer, clientBuffer.Length, SocketFlags.None);
 
-            }
-            catch { }
-        }
-        public void ReceiveCallback(IAsyncResult AR)
-        {
-            bool FirstCallback = true;
-            try
-            {
-                if (connectingSocket.EndReceive(AR) > 1)
+                if (player == 1)
+                    MessageBox.Show($"Client 1 receive \r\n" +
+                        $"byte[0]:{clientBuffer[0]} \r\n" +
+                    $"byte[3]:{clientBuffer[3]}\r\n" +
+                    $"byte[4]:{clientBuffer[4]}\r\n");
+                else if (player == 0)
+                    MessageBox.Show($"Client 2 receive \r\n" +
+                        $"byte[0]:{clientBuffer[0]} \r\n" +
+                    $"byte[3]:{clientBuffer[3]}\r\n" +
+                    $"byte[4]:{clientBuffer[4]}\r\n");
+
+                if (!BeforeGameStage && player == -1)
                 {
-                    connectingSocket.Receive(clientBuffer, clientBuffer.Length, SocketFlags.None);
+                    MessageBox.Show("Error code 02");//02
+                }
 
-                    if (player == 1)
-                        MessageBox.Show($"Client 1 receive \r\n" +
-                            $"byte[0]:{clientBuffer[0]} \r\n" +
-                        $"byte[3]:{clientBuffer[3]}\r\n" +
-                        $"byte[4]:{clientBuffer[4]}\r\n");
-                    else if (player == 0)
-                        MessageBox.Show($"Client 2 receive \r\n" +
-                            $"byte[0]:{clientBuffer[0]} \r\n" +
-                        $"byte[3]:{clientBuffer[3]}\r\n" +
-                        $"byte[4]:{clientBuffer[4]}\r\n");
 
-                    if (!BeforeGameStage && player == -1)
+                //Được gọi bởi hàm TryToConnect
+                if (BeforeGameStage)
+                {
+                    BeforeGameStage = false;
+                    //Server quyết định chọn bên trắng hay đen cho client
+                    if (clientBuffer[0] == 1)
                     {
-                        MessageBox.Show("Error code 02");//02
+                        player = 1;
+                        MessageBox.Show("Bạn là bên trắng, bạn đi trước");
                     }
-
-
-                    //Được gọi bởi hàm TryToConnect
-                    if (BeforeGameStage)
+                    else if (clientBuffer[0] == 0)
                     {
-                        BeforeGameStage = false;
-                        //Server quyết định chọn bên trắng hay đen cho client
-                        if (clientBuffer[0] == 1)
-                        {
-                            player = 1;
-                            MessageBox.Show("Bạn là bên trắng, bạn đi trước");
-                        }
-                        else if (clientBuffer[0] == 0)
-                        {
-                            player = 0;
-                            MessageBox.Show("Bạn là bên đen, đợi nước đi");
+                        player = 0;
+                        MessageBox.Show("Bạn là bên đen, đợi nước đi");
 
-                            StartReceiving();
-                        }
-                        else
-                            MessageBox.Show("Error code 01");//01
+                        StartReceiving();
                     }
                     else
-                    {
-                        //if (player == 0 && FirstCallback)
-                        //{
-                        //    Send(clientBuffer);
-                        //    Send(clientBuffer);
-                        //    MessageBox.Show($"client 2 send buffer{clientBuffer[3]}");
-                        //    FirstCallback = !FirstCallback;
-                        //}
-
-                        //Truyền bytes vừa nhận vào receivebytes để xử lý ở class ChessPlay
-                        BufferOpen(clientBuffer,chessBoard);
-                        
-                        
-                        clientBuffer = new byte[8];
-                        
-                    }
+                        MessageBox.Show("Error code 01");//01
+                    return clientBuffer;
                 }
                 else
                 {
-                    connectingSocket.Disconnect(true);
+                    //if (player == 0 && FirstCallback)
+                    //{
+                    //    Send(clientBuffer);
+                    //    Send(clientBuffer);
+                    //    MessageBox.Show($"client 2 send buffer{clientBuffer[3]}");
+                    //    FirstCallback = !FirstCallback;
+                    //}
+
+                    //Truyền bytes vừa nhận vào receivebytes để xử lý ở class ChessPlay
+                    return clientBuffer;
                 }
             }
+
+
             catch (Exception ex)
             {
                 //socket exception, Gỡ kết nối và cố kết nối lại với server
@@ -552,13 +536,9 @@ namespace FormClient
                     MessageBox.Show("exception: " + ex);
                     //StartReceiving();
                 }
+                return null;
             }
         }
-
-
-
-
-
 
     }
 }
