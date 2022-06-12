@@ -1,7 +1,7 @@
 ﻿
-namespace server1
+namespace Server
 {
-    partial class Server
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -34,9 +34,9 @@ namespace server1
             // 
             // btnListen
             // 
-            this.btnListen.Location = new System.Drawing.Point(307, 162);
+            this.btnListen.Location = new System.Drawing.Point(92, 112);
             this.btnListen.Name = "btnListen";
-            this.btnListen.Size = new System.Drawing.Size(142, 67);
+            this.btnListen.Size = new System.Drawing.Size(127, 66);
             this.btnListen.TabIndex = 0;
             this.btnListen.Text = "Listen";
             this.btnListen.UseVisualStyleBackColor = true;
@@ -49,7 +49,7 @@ namespace server1
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.btnListen);
             this.Name = "Form1";
-            this.Text = "Server";
+            this.Text = "Form1";
             this.ResumeLayout(false);
 
         }

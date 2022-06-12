@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace server1
+namespace Server
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace server1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Server());
+            Application.Run(new Form1());
         }
     }
 }
