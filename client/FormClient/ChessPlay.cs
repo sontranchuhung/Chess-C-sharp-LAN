@@ -95,10 +95,7 @@ namespace FormClient
 
             if (localPlay == true)
             {
-<<<<<<< HEAD
                 clientBuffer = await TryToConnect();
-=======
->>>>>>> parent of 3bc279b (11/6)
                 TryToConnect();
             }
 
@@ -382,7 +379,6 @@ namespace FormClient
 
         //socket things
 
-<<<<<<< HEAD
         //Gọi bằng cách chơi trong bàn cờ
         public void localPlaySendMove(ChessPiece _chessPiece, Chess.Point _from, Chess.Point _to)
         {
@@ -468,12 +464,8 @@ namespace FormClient
                 MessageBox.Show(ex.ToString());
             }
         }
-<<<<<<< HEAD
         public byte[] TryToConnect()
         public class Client
-=======
-
->>>>>>> parent of 3bc279b (11/6)
         public void TryToConnect()
         {
             private Socket connectingSocket;
@@ -526,17 +518,13 @@ namespace FormClient
                     throw new Exception();
                 }
             }
-<<<<<<< HEAD
-        
         public byte[] StartReceiving()
-=======
+    { 
             catch (Exception ex)
             {
                 throw new Exception();
             }
         }
-
->>>>>>> parent of 3bc279b (11/6)
         public void StartReceiving()
         {
             try
@@ -629,7 +617,6 @@ namespace FormClient
                     MessageBox.Show("exception: " + ex);
                     //StartReceiving();
                 }
-<<<<<<< HEAD
                 return null;
             public void StartReceiving()
             {
@@ -691,15 +678,7 @@ namespace FormClient
                         StartReceiving();
                     }
                 }
-=======
->>>>>>> parent of 3bc279b (11/6)
             }
         }
-
-
-
-
-
-
     }
 }
