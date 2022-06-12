@@ -8,14 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
 namespace Server
 {
-    public partial class Form1 : Form
+    public partial class ServerStartListen : Form
     {
-        public Form1()
+        public ServerStartListen()
         {
             InitializeComponent();
         }
@@ -74,7 +75,7 @@ namespace Server
         {
             public Socket clientSock { get; set; }
             public int id { get; set; }
-            public byte[] data;
+            public byte[] data = new byte[12];
             public bool isWaiting = false;
 
             public Client(Socket _socket, int _id)
@@ -84,14 +85,17 @@ namespace Server
             }
             public void send(byte[] data)
             {
-                clientSock.Send(data, 0, data.Length, SocketFlags.None);
+                var fullPacket = new List<byte>();
+                fullPacket.AddRange(BitConverter.GetBytes(data.Length));
+                fullPacket.AddRange(data);
+                clientSock.Send(fullPacket.ToArray());
             }
             public void StartReceiving()
             {
                 try
                 {
-                    data = new byte[8];
-                    clientSock.BeginReceive(data, 0, data.Length, SocketFlags.None, ReceiveCallback, null);
+                    data = new byte[12];
+                    clientSock.BeginReceive(data, 0, 4, SocketFlags.None, ReceiveCallback, null);
                 }
                 catch { }
             }
@@ -99,7 +103,6 @@ namespace Server
             {
                 try
                 {
-
                     if (clientSock.EndReceive(AR) > 1)
                     {
                         clientSock.Receive(data, data.Length, SocketFlags.None);
@@ -168,9 +171,9 @@ namespace Server
             public static void MatchBetween(Client firstPlayer, Client secondPlayer)
             {
                 //buffer để gửi
-                byte[] buffer = new byte[8];
+                byte[] buffer = new byte[12];
 
-                #region: TRƯỚC VÁN ĐẤU
+                #region TRƯỚC VÁN ĐẤU
 
                 while (true)
                 {
@@ -179,15 +182,12 @@ namespace Server
                     if (result == DialogResult.Yes)
                         break;
                 }
-                //Gửi lần đầu để gọi hàm CallBack trong client
-                firstPlayer.clientSock.Send(buffer);
-                secondPlayer.clientSock.Send(buffer);
 
                 //Gửi thông tin vào lần 2
-                buffer[0] = 0;
+                buffer[0] = 1;
                 firstPlayer.clientSock.Send(buffer);
 
-                buffer[0] = 1;
+                buffer[0] = 0;
                 secondPlayer.clientSock.Send(buffer);
 
                 #endregion
@@ -202,14 +202,25 @@ namespace Server
                     if (WhiteToPlay)
                     {
                         firstPlayer.StartReceiving();
-                        secondPlayer.send(buffer);
+
+                        while (firstPlayer.data[4] == firstPlayer.data[6] &&
+                            firstPlayer.data[5] == firstPlayer.data[7])
+                        {
+                            Thread.Sleep(3000);
+                        }
                         buffer = firstPlayer.data;
                         secondPlayer.send(buffer);
                     }
                     else
                     {
                         secondPlayer.StartReceiving();
-                        firstPlayer.send(buffer);
+
+                        while (secondPlayer.data[4] == secondPlayer.data[6] &&
+                            secondPlayer.data[5] == secondPlayer.data[7])
+                        {
+                            Thread.Sleep(3000);
+                        }
+
                         buffer = secondPlayer.data;
                         firstPlayer.send(buffer);
                     }

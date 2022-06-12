@@ -1,7 +1,7 @@
 ﻿
 namespace Server
 {
-    partial class Form1
+    partial class ServerStartListen
     {
         /// <summary>
         /// Required designer variable.

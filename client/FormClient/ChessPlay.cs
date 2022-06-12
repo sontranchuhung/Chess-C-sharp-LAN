@@ -19,49 +19,30 @@ namespace FormClient
     {
         static public Chess.ChessBoard chessBoard = new Chess.ChessBoard();
         Chess.Point selectedPiece = new Chess.Point();
-
         //Nếu chưa hiện nước có thể đi là -1, còn nếu thực hiện thay đổi bàn cờ thì là 0 hoặc 1 tuỳ vào quân cờ
         static int selectedPlayer = -1;
 
         #region Local play
 
-<<<<<<< HEAD
-        public bool localPlay = dashboard.localPlay;
+        bool localPlay = dashboard.localPlay;
+        int localPlayer = -1;
+        static Socket clientSocket { get; set; }
+        byte[] sendBuffer = new byte[8];
+        byte[] recvBuffer = new byte[8];
 
-        public Socket connectingSocket;
-        public int player = -1;
-        public bool isYourturn;
-        public bool BeforeGameStage = true;
-        public byte[] clientBuffer;
-        //buffer = {0 clientSide, 1 Win,2 Castling,3 PieceValue,4 fromX,5 fromY,6 toX,7 toY}
-        //byte[] để gửi
-=======
-        //buffer = {0 clientPlayer, 1 Win,2 Castling,3 PromotionValue,4 fromX,5 fromY,6 toX,7 toY}
->>>>>>> parent of d02c010 (Nhập class Client vào class chính)
-        public byte[] buffer = new byte[8];
+        //List buffer {4 byte đầu là độ dài chuỗi byte, 8 byte sau là dữ liệu}
+        //buffer = {
+        //[0] clientSide (-1,0,1) ,
+        //[1] Win (0,1),
+        //[2] (dự phòng)
+        //[3] PieceValue (Not used yet)
+        //[4] fromX,
+        //[5] fromY,
+        //[6] toX,
+        //[7] toY
+        //}
 
-        public int clientSide = -1;
-        public int Win = 0;
-        public int Castling = 0;
-<<<<<<< HEAD
-        //Có thể là promotion value {0 Pawn, 1 King, 2 Knight, 3 Bishop, 4 Rook, 5 Queen}
-        public int PieceValue = -1;
-        public int fromX = -1;
-        public int fromY = -1;
-        public int toX = -1;
-        public int toY = -1;
 
-=======
-        public int PromotionValue = -1;
-        public int fromX;
-        public int fromY;
-        public int toX;
-        public int toY;
-
-        Client client = new Client();
-        public bool localPlay = dashboard.localPlay;
-
->>>>>>> parent of d02c010 (Nhập class Client vào class chính)
         #endregion
 
         public ChessPlay()
@@ -69,7 +50,7 @@ namespace FormClient
             InitializeComponent();
         }
 
-        private async void Form_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             for (int x = 1; x < boardLayoutPanel.ColumnCount; x++)
             {
@@ -91,21 +72,13 @@ namespace FormClient
                 }
             }
 
-            DrawPieces(chessBoard);
-
             if (localPlay == true)
             {
-                clientBuffer = await TryToConnect();
                 TryToConnect();
             }
 
             DrawPieces(chessBoard);
-        }//Vẽ bàn cờ 
-                client.TryToConnect();
-                
-            }
         }
-
         private void Click_Board(object s, EventArgs e)
         {
             #region LOAD BÀN CỜ MỖI KHI CLICK BUTTON
@@ -113,12 +86,19 @@ namespace FormClient
             DrawPieces(chessBoard);
             if (!(s is Button)) return;
 
-            if (localPlay == true && client.player != chessBoard.playerTurn)
+            if (localPlay)
             {
-                MessageBox.Show("Chưa tới lượt bạn!");
-                return;
+                if (localPlayer == -1)
+                {
+                    MessageBox.Show("Wating for Server to reply");
+                    return;
+                }
+                else if (localPlayer != chessBoard.playerTurn)
+                {
+                    MessageBox.Show("Chưa tới lượt bạn!");
+                    return;
+                }
             }
-
             Button button = (Button)s;
             button.BackColor = System.Drawing.Color.Transparent;
             button.FlatStyle = FlatStyle.Standard;
@@ -141,26 +121,14 @@ namespace FormClient
                         selectedPlayer = -1;
                         return;
                     }
-
-                    if (localPlay == true)
+                    if (localPlay)
                     {
-<<<<<<< HEAD
-                        Chess.Point _point;
-                        ChessPiece _chessPiece = chessBoard[a.Column - 1, a.Row - 1];
-                        _point.x = a.Column - 1;
-                        _point.y = a.Row - 1;
-                        localPlaySendMove(_chessPiece,selectedPiece,_point);
-=======
-                        client.Send(buffer);
-                        buffer[3] = (byte)selectedPiece.x;
-                        buffer[4] = (byte)selectedPiece.y;
-                        buffer[5] = (byte)(a.Column - 1);
-                        buffer[6] = (byte)(a.Row - 1);
-                        client.Send(buffer);
-                        DrawPieces(chessBoard);
-                        buffer = tempBuffer;//reset lại buffer để gửi lần tiếp theo
-                        client.StartReceiving();
->>>>>>> parent of d02c010 (Nhập class Client vào class chính)
+                        sendBuffer[4] = (byte)selectedPiece.x;
+                        sendBuffer[5] = (byte)selectedPiece.y;
+                        sendBuffer[6] = (byte)(a.Column - 1);
+                        sendBuffer[7] = (byte)(a.Row -1);
+                        Send(sendBuffer);
+                        StartReceiving(clientSocket);
                     }
 
                     selectedPlayer = -1;
@@ -187,27 +155,15 @@ namespace FormClient
                     selectedPlayer = -1;
                     return;
                 }
-                if (localPlay == true)
+                if (localPlay)
                 {
-<<<<<<< HEAD
-                    Chess.Point _point;
-                    ChessPiece _chessPiece = chessBoard[a.Column - 1, a.Row - 1];
-                    _point.x = a.Column - 1;
-                    _point.y = a.Row - 1;
-                    localPlaySendMove(_chessPiece, selectedPiece, _point);
-=======
-                    client.Send(buffer);
-                    buffer[3] = (byte)selectedPiece.x;
-                    buffer[4] = (byte)selectedPiece.y;
-                    buffer[5] = (byte)(a.Column - 1);
-                    buffer[6] = (byte)(a.Row - 1);
-                    client.Send(buffer);
-                    DrawPieces(chessBoard);
-                    buffer = tempBuffer;//reset lại buffer để gửi lần tiếp theo
-                    client.StartReceiving();
->>>>>>> parent of d02c010 (Nhập class Client vào class chính)
+                    sendBuffer[4] = (byte)selectedPiece.x;
+                    sendBuffer[5] = (byte)selectedPiece.y;
+                    sendBuffer[6] = (byte)(a.Column - 1);
+                    sendBuffer[7] = (byte)(a.Row - 1);
+                    Send(sendBuffer);
+                    StartReceiving(clientSocket);
                 }
-
                 selectedPlayer = -1;
                 DrawPieces(chessBoard);
                 chessBoard.SwapPlayerTurn();
@@ -230,7 +186,6 @@ namespace FormClient
                 foreach (Chess.Point point in chessBoard.PieceActions(a.Column - 1, a.Row - 1))
                 {
                     Button actionButton = (Button)boardLayoutPanel.GetControlFromPosition(point.x + 1, point.y + 1);
-                    //actionButton.Text = "Ăn đây nè!";
                     if (actionButton.BackgroundImage == null)
                     {
                         actionButton.BackgroundImage = global::Chess.Properties.Resources.dot;
@@ -243,7 +198,6 @@ namespace FormClient
             }
             #endregion
         }
-
         private void DrawPieces(Chess.ChessBoard board)
         {
             for (int x = 0; x < board.GetLength(0); x++)
@@ -336,349 +290,113 @@ namespace FormClient
 
             #region: KIỂM TRA CHIẾU HẾT, PHONG CẤP, NHẬP THÀNH
 
-            //Chiếu hết
-            if (chessBoard.KingInCheck(chessBoard.playerTurn))
+            #endregion
+
+            //Socket Things
+        }
+        public void TryToConnect()
+        {
+            Socket connectingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            while (!connectingSocket.Connected)
             {
-                bool GameMaybeEnd = true;
-                //Duyệt mảng, nếu vua đang bị chiếu nhưng không có quân cờ nào có khả năng di chuyển thì nó là chiếu bí
-                for (int x = 0; x < board.GetLength(0); x++)
+                Thread.Sleep(1000);
+
+                try
                 {
-                    for (int y = 0; y < board.GetLength(1); y++)
+                    connectingSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1234));
+                }
+                catch
+                {
+                    if (MessageBox.Show("Kết nối tới Server thất bại! Bạn có muốn thử lại?", "", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
-                        if (chessBoard[x, y] != null)
-                            if (chessBoard[x, y].Player == chessBoard.playerTurn && chessBoard.PieceActions(x, y).Count() != 0)
-                            {
-                                GameMaybeEnd = false;
-                                Win = 1;
-                                break;
-                            }
-                    }
-                    if (!GameMaybeEnd)
-                    {
-                        MessageBox.Show("Bạn đã bị chiếu hết");
-                        this.Close();
                         break;
                     }
                 }
             }
-            //Phong cấp quân
-            if (chessBoard.PromotionValue != -1)
-            {
-                PromotionValue = chessBoard.PromotionValue;
-                chessBoard.PromotionValue = -1;
-            }
-            //Nhập thành
-            if (chessBoard.castling == 1)
-            {
-                Castling = 1;
-                chessBoard.castling = 0;
-            }
-
-            #endregion
+            StartReceiving(connectingSocket);
         }
-
-        //socket things
-
-        //Gọi bằng cách chơi trong bàn cờ
-        public void localPlaySendMove(ChessPiece _chessPiece, Chess.Point _from, Chess.Point _to)
-        {
-            Send(buffer);
-            //piece value { 0 Pawn, 1 King, 2 Knight, 3 Bishop, 4 Rook, 5 Queen}
-            switch (_chessPiece.ToString().Replace("Chess.", ""))
-            {
-                case ("Pawn"):
-                    buffer[3] = 0;
-                    break;
-                case ("King"):
-                    buffer[3] = 1;
-                    break;
-                case ("Knight"):
-                    buffer[3] = 2;
-                    break;
-                case ("Bishop"):
-                    buffer[3] = 3;
-                    break;
-                case ("Rook"):
-                    buffer[3] = 4;
-                    break;
-                case ("Queen"):
-                    buffer[3] = 5;
-                    break;
-                default:
-                    buffer[3] = 0;
-                    MessageBox.Show("Quân không tồn tại! Mã lỗi 03");//03
-                    break;
-            }
-            buffer[4] = (byte)_from.x;
-            buffer[5] = (byte)_from.y;
-            buffer[6] = (byte)_to.x;
-            buffer[7] = (byte)_to.y;
-            Send(buffer);
-            buffer = new byte[8];
-            
-            StartReceiving();
-        }
-        //Gọi bởi hàm ReceiveCallBack
-        public void BufferOpen(byte[] receiveBytes, Chess.ChessBoard board)
-        {
-            ChessPiece _chessPiece = board[(int)buffer[4], (int)buffer[5]];
-            //if (_chessPiece.Player == 1)
-            //    _chessPiece.Player = 0;
-            //else _chessPiece.Player = 1;
-
-            switch(buffer[3])
-            {
-                case 0:
-                    _chessPiece = new Chess.Pawn();
-                    break;
-                case 1:
-                    _chessPiece = new Chess.King();
-                    break;
-                case 2:
-                    _chessPiece = new Chess.Knight();
-                    break;
-                case 3:
-                    _chessPiece = new Chess.Bishop();
-                    break;
-                case 4:
-                    _chessPiece = new Chess.Rook();
-                    break;
-                case 5:
-                    _chessPiece = new Chess.Queen();
-                    break;
-                default:
-                    MessageBox.Show("Lỗi 04, buffer[3] sai");//04
-                    break;
-            }
-
-            _chessPiece.CalculateMoves();
-            board[(int)receiveBytes[4], (int)receiveBytes[5]] = null;
-            board[(int)receiveBytes[6], (int)receiveBytes[7]] = _chessPiece;
-            try
-            {
-                DrawPieces(chessBoard);
-                chessBoard.SwapPlayerTurn();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-        public byte[] TryToConnect()
-        public class Client
-        public void TryToConnect()
-        {
-            private Socket connectingSocket;
-
-            public int player = -1;
-            public bool isYourturn;
-            public bool BeforeGameStage = true;
-            static public byte[] clientBuffer;
-            
-            public void TryToConnect()
-            {
-                connectingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                while (!connectingSocket.Connected)
-                {
-                    Thread.Sleep(1000);
-
-                    try
-                    {
-                        connectingSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1234));
-                    }
-                    catch { MessageBox.Show("Connect to server failed!"); }
-                }
-                StartReceiving();
-            }
-
-            public void Disconnect()
-            {
-                connectingSocket.Disconnect(true);
-            }
-
-            public void Send(byte[] buffer)
-            {
-                try
-                {
-                    connectingSocket.Send(buffer);
-                }
-                catch { MessageBox.Show("Connect to server failed!"); }
-            }
-            StartReceiving();
-        }
-
-        public void Send(byte[] buffer)
+        public void Send(byte[] data)
         {
             try
             {
-                if (player == 1 && buffer[3] != 0)
-                catch (Exception ex)
+                if (localPlayer == 1)
                 {
-                    throw new Exception();
+                    data[0] = 1;
                 }
+                else if (localPlayer == 0)
+                {
+                    data[0] = 0;
+                }
+                else
+                {
+                    data[0] = 2;
+                    MessageBox.Show("Error 01, localPlayer = -1");
+                }
+
+                var fullPacket = new List<byte>();
+                fullPacket.AddRange(BitConverter.GetBytes(data.Length));
+                fullPacket.AddRange(data);
+                clientSocket.Send(fullPacket.ToArray());
             }
-        public byte[] StartReceiving()
-    { 
             catch (Exception ex)
             {
                 throw new Exception();
             }
         }
-        public void StartReceiving()
+        public void StartReceiving(Socket _sock)
         {
+
+            clientSocket = _sock;
             try
             {
-                clientBuffer = new byte[8];
-                connectingSocket.BeginReceive(clientBuffer, 0, clientBuffer.Length, SocketFlags.None, ReceiveCallback, null);
-
+                clientSocket.BeginReceive(recvBuffer, 0, 4, SocketFlags.None, ReceiveCallback, null);
             }
             catch { }
         }
-        public void ReceiveCallback(IAsyncResult AR)
+        private void ReceiveCallback(IAsyncResult AR)
         {
-            bool FirstCallback = true;
             try
             {
-                if (connectingSocket.EndReceive(AR) > 1)
+                if (clientSocket.EndReceive(AR) > 1)
                 {
-                    connectingSocket.Receive(clientBuffer, clientBuffer.Length, SocketFlags.None);
+                    recvBuffer = new byte[8];
 
-                    if (player == 1)
-                        MessageBox.Show($"Client 1 receive \r\n" +
-                            $"byte[0]:{clientBuffer[0]} \r\n" +
-                        $"byte[3]:{clientBuffer[3]}\r\n" +
-                        $"byte[4]:{clientBuffer[4]}\r\n");
-                    else if (player == 0)
-                        MessageBox.Show($"Client 2 receive \r\n" +
-                            $"byte[0]:{clientBuffer[0]} \r\n" +
-                        $"byte[3]:{clientBuffer[3]}\r\n" +
-                        $"byte[4]:{clientBuffer[4]}\r\n");
+                    clientSocket.Receive(recvBuffer, recvBuffer.Length, SocketFlags.None);
 
-                    if (!BeforeGameStage && player == -1)
-                    {
-                        MessageBox.Show("Error code 02");//02
-                    }
+                    MessageBox.Show($"recvBuffer:\r\n[0]: {recvBuffer[0]}\r\n[1]: {recvBuffer[1]}\r\n[2]: {recvBuffer[2]}\r\n[3]: {recvBuffer[3]}\r\n[4]: {recvBuffer[5]}\r\n[5]: {recvBuffer[6]}\r\n[7] {recvBuffer[7]}");
 
-
-                    //Được gọi bởi hàm TryToConnect
-                    if (BeforeGameStage)
-                    {
-                        BeforeGameStage = false;
-                        //Server quyết định chọn bên trắng hay đen cho client
-                        if (clientBuffer[0] == 1)
-                        {
-                            player = 1;
-                            MessageBox.Show("Bạn là bên trắng, bạn đi trước");
-                        }
-                        else if (clientBuffer[0] == 0)
-                        {
-                            player = 0;
-                            MessageBox.Show("Bạn là bên đen, đợi nước đi");
-
-                            StartReceiving();
-                        }
-                        else
-                            MessageBox.Show("Error code 01");//01
-                    }
+                    if (localPlayer == -1)
+                        localPlayer = recvBuffer[0];
                     else
                     {
-                        //if (player == 0 && FirstCallback)
-                        //{
-                        //    Send(clientBuffer);
-                        //    Send(clientBuffer);
-                        //    MessageBox.Show($"client 2 send buffer{clientBuffer[3]}");
-                        //    FirstCallback = !FirstCallback;
-                        //}
-
-                        //Truyền bytes vừa nhận vào receivebytes để xử lý ở class ChessPlay
-                        BufferOpen(clientBuffer,chessBoard);
-                        
-                        
-                        clientBuffer = new byte[8];
-                        
+                        if (localPlayer == 0)
+                            StartReceiving(clientSocket);
                     }
                 }
                 else
                 {
-                    connectingSocket.Disconnect(true);
+                    Disconnect();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                //socket exception, Gỡ kết nối và cố kết nối lại với server
-                if (!connectingSocket.Connected)
+                if (!clientSocket.Connected)
                 {
-                    connectingSocket.Disconnect(true);
+                    Disconnect();
                     TryToConnect();
                 }
                 else
                 {
-                    MessageBox.Show("exception: " + ex);
-                    //StartReceiving();
-                }
-                return null;
-            public void StartReceiving()
-            {
-                try
-                {
-                    clientBuffer = new byte[8];
-                    connectingSocket.BeginReceive(clientBuffer, 0, clientBuffer.Length, SocketFlags.None, ReceiveCallback, null);
-                }
-                catch { }
-            }
-            public void ReceiveCallback(IAsyncResult AR)
-            {
-                try
-                {
-                   
-                    connectingSocket.Receive(clientBuffer, clientBuffer.Length, SocketFlags.None);
-
-                    //Được gọi bởi hàm TryToConnect
-                    if (BeforeGameStage)
-                    {
-                        BeforeGameStage = false;
-                        //Server quyết định chọn bên trắng hay đen cho client
-                        if (clientBuffer[0] == 0)
-                        {
-                            player = 1;
-                            MessageBox.Show("Bạn là bên trắng, bạn đi trước");
-                        }
-                        else if (clientBuffer[0] == 1)
-                        {
-                            player = 0;
-                            MessageBox.Show("Bạn là bên đen, đợi nước đi");
-
-                        }
-                        else
-                            MessageBox.Show("Wrong buffer[0]");
-
-                    }
-                    //Trong ván đấu
-                    else
-                    {
-                        
-                        if (clientBuffer[3] != -1)
-                        {
-                            chessBoard.PromotionValue = clientBuffer[3];
-                        }
-                        chessBoard.ActionPiece(clientBuffer[4], clientBuffer[5], clientBuffer[6], clientBuffer[7]);
-                    }
-                }
-                catch
-                {
-                    //socket exception, Gỡ kết nối và cố kết nối lại với server
-                    if (!connectingSocket.Connected)
-                    {
-                        Disconnect();
-                        TryToConnect();
-                    }
-                    else
-                    {
-                        StartReceiving();
-                    }
+                    StartReceiving(clientSocket);
                 }
             }
         }
+        private void Disconnect()
+        {
+            clientSocket.Disconnect(true);
+        }
     }
 }
+
+
