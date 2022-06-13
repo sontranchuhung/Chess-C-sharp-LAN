@@ -75,7 +75,7 @@ namespace Server
         {
             public Socket clientSock { get; set; }
             public int id { get; set; }
-            public byte[] data = new byte[12];
+            public byte[] data = new byte[8];
             public bool isWaiting = false;
 
             public Client(Socket _socket, int _id)
@@ -83,11 +83,11 @@ namespace Server
                 clientSock = _socket;
                 id = _id;
             }
-            public void send(byte[] data)
+            public void send(byte[] _data)
             {
                 var fullPacket = new List<byte>();
-                fullPacket.AddRange(BitConverter.GetBytes(data.Length));
-                fullPacket.AddRange(data);
+                fullPacket.AddRange(BitConverter.GetBytes(_data.Length));
+                fullPacket.AddRange(_data);
                 clientSock.Send(fullPacket.ToArray());
             }
             public void StartReceiving()
@@ -103,6 +103,7 @@ namespace Server
             {
                 try
                 {
+                    data = new byte[8];
                     if (clientSock.EndReceive(AR) > 1)
                     {
                         clientSock.Receive(data, data.Length, SocketFlags.None);
@@ -171,34 +172,34 @@ namespace Server
             public static void MatchBetween(Client firstPlayer, Client secondPlayer)
             {
                 //buffer để gửi
-                byte[] buffer = new byte[12];
+                byte[] buffer = new byte[8];
 
                 #region TRƯỚC VÁN ĐẤU
 
-                while (true)
-                {
-                    DialogResult result = MessageBox.Show($"2. Ấn Yes để bắt đầu kết nối 2 client id:{firstPlayer.id} và id:{secondPlayer.id}",
-                        "QuestionDialog", MessageBoxButtons.YesNo);
-                    if (result == DialogResult.Yes)
-                        break;
-                }
+                //while (true)
+                //{
+                //    DialogResult result = MessageBox.Show($"2. Ấn Yes để bắt đầu kết nối 2 client id:{firstPlayer.id} và id:{secondPlayer.id}",
+                //        "QuestionDialog", MessageBoxButtons.YesNo);
+                //    if (result == DialogResult.Yes)
+                //        break;
+                //}
 
-                //Gửi thông tin vào lần 2
+
+                //Quy định quân đen hay trắng
                 buffer[0] = 1;
-                firstPlayer.clientSock.Send(buffer);
+                firstPlayer.send(buffer);
 
                 buffer[0] = 0;
-                secondPlayer.clientSock.Send(buffer);
+                secondPlayer.send(buffer);
 
                 #endregion
 
-                #region: VÁN ĐẤU
+                #region VÁN ĐẤU
 
                 bool WhiteToPlay = true;
                 while (true)
                 {
                     buffer = new byte[8];
-                    //Cần phải gửi gói tin mẫu trước để gọi hàm CallBack của client
                     if (WhiteToPlay)
                     {
                         firstPlayer.StartReceiving();
@@ -206,7 +207,7 @@ namespace Server
                         while (firstPlayer.data[4] == firstPlayer.data[6] &&
                             firstPlayer.data[5] == firstPlayer.data[7])
                         {
-                            Thread.Sleep(3000);
+                            Thread.Sleep(1000);
                         }
                         buffer = firstPlayer.data;
                         secondPlayer.send(buffer);
@@ -218,7 +219,7 @@ namespace Server
                         while (secondPlayer.data[4] == secondPlayer.data[6] &&
                             secondPlayer.data[5] == secondPlayer.data[7])
                         {
-                            Thread.Sleep(3000);
+                            Thread.Sleep(1000);
                         }
 
                         buffer = secondPlayer.data;
@@ -226,10 +227,7 @@ namespace Server
                     }
                     WhiteToPlay = !WhiteToPlay;
                     //Ván kết thúc
-                    if (buffer[1] == 1)
-                    {
-                        break;
-                    }
+                    
                 }
 
                 #endregion

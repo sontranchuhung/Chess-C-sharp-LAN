@@ -173,7 +173,6 @@ namespace FormClient
             else
             {
                 selectedPlayer = chessPiece.Player;
-
                 //Check lượt di chuyển quân khi chơi single play
                 if (chessBoard.playerTurn != selectedPlayer)
                 {
@@ -364,14 +363,32 @@ namespace FormClient
 
                     clientSocket.Receive(recvBuffer, recvBuffer.Length, SocketFlags.None);
 
-                    MessageBox.Show($"recvBuffer:\r\n[0]: {recvBuffer[0]}\r\n[1]: {recvBuffer[1]}\r\n[2]: {recvBuffer[2]}\r\n[3]: {recvBuffer[3]}\r\n[4]: {recvBuffer[5]}\r\n[5]: {recvBuffer[6]}\r\n[7] {recvBuffer[7]}");
+                    //MessageBox.Show($"recvBuffer:\r\n[0]: {recvBuffer[0]}\r\n[1]: {recvBuffer[1]}\r\n[2]: {recvBuffer[2]}\r\n[3]: {recvBuffer[3]}\r\n" +
+                    //    $"[4]: {recvBuffer[4]}\r\n[5]: {recvBuffer[5]}\r\n[6]: {recvBuffer[6]}\r\n[7] {recvBuffer[7]}");
 
                     if (localPlayer == -1)
+                    {
                         localPlayer = recvBuffer[0];
+                        if (localPlayer == 1)
+                        {
+                            //MessageBox.Show("You play first");
+                        }
+                        else if (localPlayer == 0)
+                        {
+                            //MessageBox.Show("wait for moves");
+                            StartReceiving(clientSocket);
+                        }
+                    }
                     else
                     {
-                        if (localPlayer == 0)
-                            StartReceiving(clientSocket);
+                        chessBoard.SwapPlayerTurn();
+                        Invoke(new Action(() =>
+                        {
+                            chessBoard.PieceActions(recvBuffer[4], recvBuffer[5]);
+                            chessBoard.ActionPiece(recvBuffer[4], recvBuffer[5], recvBuffer[6], recvBuffer[7]);
+                            DrawPieces(chessBoard);
+                        }
+                        ));
                     }
                 }
                 else
